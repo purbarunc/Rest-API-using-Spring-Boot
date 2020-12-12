@@ -18,7 +18,7 @@ jobs:
       with:
         java-version: 11
     - name: Test with Gradle
-      run: ./gradlew test
+      run: ./gradle test
 
   build:
 
@@ -31,6 +31,6 @@ jobs:
       with:
         java-version: 11
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x gradle
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradle build
