@@ -24,7 +24,7 @@ jobs:
       run: gradle test
       
   build:
-    needs: Unit Tests
+    needs: [Tests]
     runs-on: windows-latest
     
     steps:
