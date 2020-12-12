@@ -38,6 +38,11 @@ jobs:
     - name: Build with Gradle
       run: gradle build -x test
       
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.1  
+      with:
+        name: user-service
+
     - name: Download Artifact
       uses: actions/download-artifact@v2.0.6
       with:
