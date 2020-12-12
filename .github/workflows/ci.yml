@@ -15,8 +15,7 @@ jobs:
       
   Unit Tests:
     runs-on: windows-latest
-    needs: setup
-    
+        
     steps:
     - uses: actions/checkout@v2
       
@@ -31,7 +30,7 @@ jobs:
   Build:
 
     runs-on: windows-latest
-    needs: test
+    needs: Unit Tests
     
     steps:
     - uses: actions/checkout@v2
