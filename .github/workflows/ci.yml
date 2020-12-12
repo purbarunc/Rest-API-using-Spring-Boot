@@ -9,7 +9,7 @@ on:
 
 jobs:
      
-  Unit Tests:
+  Tests:
     runs-on: windows-latest
     
     steps:
