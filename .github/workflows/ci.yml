@@ -43,8 +43,5 @@ jobs:
       with:
         name: user-service
 
-    - name: Download Artifact
-      uses: actions/download-artifact@v2.0.6
-      with:
-        name: user-service
+   
         
