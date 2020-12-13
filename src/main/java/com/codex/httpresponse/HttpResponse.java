@@ -3,11 +3,11 @@ package com.codex.httpresponse;
 public abstract class HttpResponse {
 	private String msg;
 
-	public HttpResponse() {
+	protected HttpResponse() {
 		super();
 	}
 
-	public HttpResponse(String msg) {
+	protected HttpResponse(String msg) {
 		super();
 		this.msg = msg;
 	}
