@@ -58,7 +58,7 @@ jacocoTestReport {
 
 sonarqube {
   properties {
-    property "sonar.projectKey", "purbarunc_Spring-Boot-Rest-API"
+    property "sonar.projectKey", "purbarunc_user-service"
     property "sonar.organization", "purbarunc"
     property "sonar.host.url", "https://sonarcloud.io"
   }
