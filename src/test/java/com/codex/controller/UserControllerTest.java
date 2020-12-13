@@ -32,6 +32,7 @@ class UserControllerTest {
 	private static final String ENDPOINT_GET_ALL_USERS = "/api/v1/users";
 	private static final String ENDPOINT_CREATE_USER = "/api/v1/user";
 	private static final String ENDPOINT_GET_USER = "/api/v1/user";
+	private static final String ENDPOINT_DELETE_USER = "/api/v1/user/";
 
 	@InjectMocks
 	private UserController userController;
@@ -116,7 +117,7 @@ class UserControllerTest {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).queryParam("id", "10")
 				.accept(MediaType.APPLICATION_JSON_VALUE);
-		when(userService.findById(anyInt())).thenReturn(new User());
+		when(userService.findById(anyInt())).thenReturn(getUserRequest());
 		mockMvc.perform(request).andExpect(status().isOk());
 	}
 
@@ -138,5 +139,14 @@ class UserControllerTest {
 				.accept(MediaType.APPLICATION_JSON_VALUE);
 		when(userService.findById(anyInt())).thenThrow(RuntimeException.class);
 		mockMvc.perform(request).andExpect(status().isInternalServerError());
+	}
+	
+	@Test
+	@DisplayName("getUser() returns response status 200 on successful service call")
+	void testDeleteUserReturns200OnSuccessfulServiceCall() throws Exception {
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(ENDPOINT_DELETE_USER.concat("10"))
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE);
+		mockMvc.perform(request).andExpect(status().isOk());
 	}
 }

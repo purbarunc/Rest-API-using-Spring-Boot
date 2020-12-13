@@ -54,8 +54,7 @@ public class UserController {
 	}
 
 	@PutMapping("/user/{userId}")
-	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody User user,
-			@PathVariable int userId) {
+	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody User user, @PathVariable int userId) {
 		user.setId(userId);
 		userService.update(user, userId);
 		return new ResponseEntity<>(new SuccessResponse(String.format("User id=%d has been updated", userId)),
@@ -69,7 +68,6 @@ public class UserController {
 			return new ResponseEntity<>(new SuccessResponse(String.format("User id=%d succesfully deleted", userId)),
 					HttpStatus.OK);
 		} catch (EmptyResultDataAccessException e) {
-			e.printStackTrace();
 			return new ResponseEntity<>(new ErrorResponse(String.format("User id=%d not found", userId)),
 					HttpStatus.NOT_FOUND);
 		}
