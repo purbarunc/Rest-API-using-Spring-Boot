@@ -11,11 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +27,6 @@ import com.codex.service.PostService;
 import com.codex.service.UserService;
 
 @RestController
-@RequestMapping("/api/v1")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -40,10 +37,9 @@ public class UserController {
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> allUsers() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
-
 	}
 
-	@GetMapping("user")
+	@GetMapping("/user")
 	public ResponseEntity<User> getUser(@RequestParam("id") int userId) {
 		return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
 	}
@@ -53,16 +49,16 @@ public class UserController {
 		return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/user/{userId}")
-	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody User user, @PathVariable int userId) {
+	@PutMapping("/user")
+	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody User user, @RequestParam("id") int userId) {
 		user.setId(userId);
 		userService.update(user, userId);
 		return new ResponseEntity<>(new SuccessResponse(String.format("User id=%d has been updated", userId)),
 				HttpStatus.OK);
 	}
 
-	@DeleteMapping("/user/{userId}")
-	public ResponseEntity<HttpResponse> deleteUser(@PathVariable int userId) {
+	@DeleteMapping("/user")
+	public ResponseEntity<HttpResponse> deleteUser(@RequestParam("id") int userId) {
 		try {
 			userService.delete(userId);
 			return new ResponseEntity<>(new SuccessResponse(String.format("User id=%d succesfully deleted", userId)),
@@ -73,13 +69,13 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/user/{userId}/posts")
-	public ResponseEntity<List<Post>> allPosts(@PathVariable int userId) {
+	@GetMapping("/user/posts")
+	public ResponseEntity<List<Post>> allPosts(@RequestParam("id") int userId) {
 		return new ResponseEntity<>(userService.findById(userId).getPosts(), HttpStatus.OK);
 	}
 
-	@PostMapping("/user/posts/{userId}")
-	public ResponseEntity<Post> createPost(@PathVariable int userId, @NotNull @RequestBody Post post) {
+	@PostMapping("/user/posts")
+	public ResponseEntity<Post> createPost(@RequestParam("id") int userId, @NotNull @RequestBody Post post) {
 		User user = userService.findById(userId);
 		if (user == null) {
 			throw new UserNotFoundException("id: " + userId);

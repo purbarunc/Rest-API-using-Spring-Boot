@@ -1,9 +1,10 @@
 package com.codex.controller;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -29,10 +31,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 class UserControllerTest {
-	private static final String ENDPOINT_GET_ALL_USERS = "/api/v1/users";
-	private static final String ENDPOINT_CREATE_USER = "/api/v1/user";
-	private static final String ENDPOINT_GET_USER = "/api/v1/user";
-	private static final String ENDPOINT_DELETE_USER = "/api/v1/user/";
+	private static final String ENDPOINT_GET_ALL_USERS = "/users";
+	private static final String ENDPOINT_CREATE_USER = "/user";
+	private static final String ENDPOINT_GET_USER = "/user";
+	private static final String ENDPOINT_DELETE_USER = "/user";
 
 	@InjectMocks
 	private UserController userController;
@@ -77,7 +79,7 @@ class UserControllerTest {
 		when(userService.create(any())).thenReturn(getUserRequest());
 		mockMvc.perform(request).andExpect(status().isCreated());
 	}
-	
+
 	@Test
 	@DisplayName("createUser() returns Data")
 	void testCreateUserReturnsData() throws Exception {
@@ -87,16 +89,8 @@ class UserControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
 		when(userService.create(any())).thenReturn(getUserRequest());
-		String actualResponse=mockMvc.perform(request).andReturn().getResponse().getContentAsString();
-		assertTrue(actualResponse.equals(requestBody));
-	}
-
-	private User getUserRequest() {
-		User user=new User();
-		user.setName("Ashish");
-		user.setAge(35);
-		user.setCity("Kota");
-		return user;
+		String actualResponse = mockMvc.perform(request).andReturn().getResponse().getContentAsString();
+		assertEquals(requestBody, actualResponse);
 	}
 
 	@Test
@@ -140,13 +134,32 @@ class UserControllerTest {
 		when(userService.findById(anyInt())).thenThrow(RuntimeException.class);
 		mockMvc.perform(request).andExpect(status().isInternalServerError());
 	}
-	
+
 	@Test
-	@DisplayName("getUser() returns response status 200 on successful service call")
+	@DisplayName("deleteUser() returns response status 200 on successful service call")
 	void testDeleteUserReturns200OnSuccessfulServiceCall() throws Exception {
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(ENDPOINT_DELETE_USER.concat("10"))
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(ENDPOINT_DELETE_USER)
+				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
 		mockMvc.perform(request).andExpect(status().isOk());
 	}
+
+	@Test
+	@DisplayName("deleteUser() returns 404 when data not found")
+	void testDeleteUserReturns404OnWhenDataNotFound() throws Exception {
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(ENDPOINT_DELETE_USER)
+				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON_VALUE);
+		doThrow(EmptyResultDataAccessException.class).when(userService).delete(anyInt());
+		mockMvc.perform(request).andExpect(status().isNotFound());
+	}
+
+	private User getUserRequest() {
+		User user = new User();
+		user.setName("Ashish");
+		user.setAge(35);
+		user.setCity("Kota");
+		return user;
+	}
+
 }

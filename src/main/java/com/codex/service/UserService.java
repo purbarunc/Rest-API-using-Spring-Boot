@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.codex.model.User;
 
+
 public interface UserService {
 	User findById(int userId);
 
