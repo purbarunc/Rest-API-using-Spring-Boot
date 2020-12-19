@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.codex.model.Post;
 
-public class UserInfoRequest {
+public class UserRequest {
 	private int id;
 	private String name;
 	private int age;
