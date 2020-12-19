@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codex.dto.UserRequest;
 import com.codex.exception.UserNotFoundException;
 import com.codex.httpresponse.ErrorResponse;
 import com.codex.httpresponse.HttpResponse;
 import com.codex.httpresponse.SuccessResponse;
+import com.codex.mapper.UserMapper;
 import com.codex.model.Post;
 import com.codex.model.User;
 import com.codex.service.PostService;
@@ -33,6 +35,9 @@ public class UserController {
 
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private UserMapper userMapper;
 
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> allUsers() {
@@ -45,13 +50,15 @@ public class UserController {
 	}
 
 	@PostMapping("/user")
-	public ResponseEntity<User> createUser(@NotNull @Valid @RequestBody User user) {
+	public ResponseEntity<User> createUser(@NotNull @Valid @RequestBody UserRequest userRequest) {
+		User user=userMapper.convertToEntity(userRequest);
 		return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/user")
-	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody User user, @RequestParam("id") int userId) {
-		user.setId(userId);
+	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody UserRequest userRequest, @RequestParam("id") int userId) {
+		userRequest.setId(userId);
+		User user=userMapper.convertToEntity(userRequest);
 		userService.update(user, userId);
 		return new ResponseEntity<>(new SuccessResponse(String.format("User id=%d has been updated", userId)),
 				HttpStatus.OK);
