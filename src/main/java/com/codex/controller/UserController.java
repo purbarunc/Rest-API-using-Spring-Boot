@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codex.dto.UserPostRequest;
 import com.codex.dto.UserRequest;
 import com.codex.exception.UserNotFoundException;
 import com.codex.httpresponse.ErrorResponse;
 import com.codex.httpresponse.HttpResponse;
 import com.codex.httpresponse.SuccessResponse;
 import com.codex.mapper.UserMapper;
+import com.codex.mapper.UserPostMapper;
 import com.codex.model.Post;
 import com.codex.model.User;
 import com.codex.service.PostService;
@@ -38,6 +40,9 @@ public class UserController {
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private UserPostMapper userPostMapper;
 
 	@GetMapping("/users")
 	public ResponseEntity<List<User>> allUsers() {
@@ -82,7 +87,8 @@ public class UserController {
 	}
 
 	@PostMapping("/user/posts")
-	public ResponseEntity<Post> createPost(@RequestParam("id") int userId, @NotNull @RequestBody Post post) {
+	public ResponseEntity<Post> createPost(@RequestParam("id") int userId, @NotNull @RequestBody UserPostRequest userPostRequest) {
+		Post post=userPostMapper.convertToEntity(userPostRequest);
 		User user = userService.findById(userId);
 		if (user == null) {
 			throw new UserNotFoundException("id: " + userId);

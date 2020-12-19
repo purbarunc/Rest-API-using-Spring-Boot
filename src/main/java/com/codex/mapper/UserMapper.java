@@ -13,12 +13,7 @@ public class UserMapper {
     private ModelMapper modelMapper;
 
 	public User convertToEntity(UserRequest userInfoRequest) {
-		User user=modelMapper.map(userInfoRequest, User.class);
-        return user;
-	}
-	
-	public UserRequest convertToDto(User user) {
-		UserRequest userInfoRequest=modelMapper.map(user, UserRequest.class);
-        return userInfoRequest;
+		return modelMapper.map(userInfoRequest, User.class);
+        
 	}
 }

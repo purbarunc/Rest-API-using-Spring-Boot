@@ -9,14 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,12 +40,12 @@ class UserControllerTest {
 	@InjectMocks
 	private UserController userController;
 
-	@MockBean
+	@Mock
 	private UserService userService;
 
-	@Autowired
-	UserMapper userMapper;
-	
+	@Mock
+	private UserMapper userMapper;
+
 	private MockMvc mockMvc;
 	private ObjectMapper objectMapper;
 
@@ -76,39 +74,34 @@ class UserControllerTest {
 
 	@Test
 	@DisplayName("createUser() returns response status 201 on successful service call")
-	@Disabled
 	void testCreateUserReturns201OnSuccessfulServiceCall() throws Exception {
 		UserRequest userRequest = getUserRequest();
 		String requestBody = objectMapper.writeValueAsString(userRequest);
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
-		when(userService.create(any())).thenReturn(userMapper.convertToEntity(getUserRequest()));
+		when(userService.create(any())).thenReturn(getUser());
 		mockMvc.perform(request).andExpect(status().isCreated());
 	}
 
 	@Test
 	@DisplayName("createUser() returns Data")
-	@Disabled
 	void testCreateUserReturnsData() throws Exception {
 		UserRequest userRequest = getUserRequest();
 		String requestBody = objectMapper.writeValueAsString(userRequest);
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
-		when(userService.create(any())).thenReturn(userMapper.convertToEntity(getUserRequest()));
+		when(userService.create(any())).thenReturn(getUser());
 		String actualResponse = mockMvc.perform(request).andReturn().getResponse().getContentAsString();
 		assertEquals(requestBody, actualResponse);
 	}
 
 	@Test
 	@DisplayName("createUser() returns response status 400 on invalid request")
-	@Disabled
 	void createUserReturns400OnInvalidRequest() throws Exception {
-		UserRequest requestData = new UserRequest();
-		String requestBody = objectMapper.writeValueAsString(requestData);
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USER)
-				.contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
 		when(userService.create(any())).thenReturn(new User());
 		mockMvc.perform(request).andExpect(status().isBadRequest());
@@ -120,7 +113,7 @@ class UserControllerTest {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).queryParam("id", "10")
 				.accept(MediaType.APPLICATION_JSON_VALUE);
-		when(userService.findById(anyInt())).thenReturn(userMapper.convertToEntity(getUserRequest()));
+		when(userService.findById(anyInt())).thenReturn(getUser());
 		mockMvc.perform(request).andExpect(status().isOk());
 	}
 
@@ -169,6 +162,14 @@ class UserControllerTest {
 		userRequest.setAge(35);
 		userRequest.setCity("Kota");
 		return userRequest;
+	}
+
+	private User getUser() {
+		User user = new User();
+		user.setName("Ashish");
+		user.setAge(35);
+		user.setCity("Kota");
+		return user;
 	}
 
 }
