@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.codex.controller.exceptionhandler.CustomExceptionHandler;
-import com.codex.dto.UserInfoRequest;
+import com.codex.dto.UserRequest;
 import com.codex.exception.UserNotFoundException;
 import com.codex.model.User;
 import com.codex.service.UserService;
@@ -96,7 +96,7 @@ class UserControllerTest {
 	@Test
 	@DisplayName("createUser() returns response status 400 on invalid request")
 	void createUserReturns400OnInvalidRequest() throws Exception {
-		UserInfoRequest requestData = new UserInfoRequest();
+		UserRequest requestData = new UserRequest();
 		String requestBody = objectMapper.writeValueAsString(requestData);
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
