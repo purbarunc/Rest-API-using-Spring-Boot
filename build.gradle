@@ -62,7 +62,6 @@ sonarqube {
     property "sonar.organization", "purbarunc"
     property "sonar.host.url", "https://sonarcloud.io"
     property "sonar.binaries", "build/classes"
-    property "sonar.tests", "junit"
     property "sonar.dynamicAnalysis", "reuseReports"
 	property "sonar.java.coveragePlugin", "jacoco"
 	property "sonar.jacoco.reportPath", "build/customJacocoReportDir/test/jacoco.exec"
