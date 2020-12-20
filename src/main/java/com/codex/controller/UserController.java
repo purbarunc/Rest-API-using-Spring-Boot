@@ -56,14 +56,14 @@ public class UserController {
 
 	@PostMapping("/user")
 	public ResponseEntity<User> createUser(@NotNull @Valid @RequestBody UserRequest userRequest) {
-		User user=userMapper.convertToEntity(userRequest);
+		User user=mapUserDTOToEntity(userRequest);
 		return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/user")
 	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody UserRequest userRequest, @RequestParam("id") int userId) {
 		userRequest.setId(userId);
-		User user=userMapper.convertToEntity(userRequest);
+		User user=mapUserDTOToEntity(userRequest);
 		userService.update(user, userId);
 		return new ResponseEntity<>(new SuccessResponse(String.format("User id=%d has been updated", userId)),
 				HttpStatus.OK);
@@ -87,7 +87,7 @@ public class UserController {
 	}
 
 	@PostMapping("/user/posts")
-	public ResponseEntity<Post> createPost(@RequestParam("id") int userId, @NotNull @RequestBody UserPostRequest userPostRequest) {
+	public ResponseEntity<Post> createUserPost(@RequestParam("id") int userId, @NotNull @RequestBody UserPostRequest userPostRequest) {
 		Post post=userPostMapper.convertToEntity(userPostRequest);
 		User user = userService.findById(userId);
 		if (user == null) {
@@ -95,5 +95,9 @@ public class UserController {
 		}
 		post.setUsers(user);
 		return new ResponseEntity<>(postService.create(post), HttpStatus.CREATED);
+	}
+	
+	private User mapUserDTOToEntity(UserRequest userRequest) {
+		return userMapper.convertToEntity(userRequest);
 	}
 }

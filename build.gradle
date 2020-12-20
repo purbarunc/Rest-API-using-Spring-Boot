@@ -49,9 +49,9 @@ test {
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
     reports {
-        xml.enabled false
+        xml.enabled true
         csv.enabled false
-        html.destination file("${buildDir}/jacocoHtml")
+        html.destination file("${buildDir}/reports/coverage")
     }
 }
 
@@ -60,5 +60,11 @@ sonarqube {
     property "sonar.projectKey", "purbarunc_user-service"
     property "sonar.organization", "purbarunc"
     property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.binaries", "build/classes"
+    property "sonar.tests", "junit"
+    property "sonar.dynamicAnalysis", "reuseReports"
+	property "sonar.junit.reportsPath", "build/test-result/test"
+	property "sonar.java.coveragePlugin", "jacoco"
+	property "sonar.jacoco.reportPath", "build/customJacocoReportDir/test/jacoco.exec"
   }
 }

@@ -6,11 +6,13 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -23,10 +25,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.codex.controller.exceptionhandler.CustomExceptionHandler;
+import com.codex.dto.UserPostRequest;
 import com.codex.dto.UserRequest;
 import com.codex.exception.UserNotFoundException;
 import com.codex.mapper.UserMapper;
+import com.codex.mapper.UserPostMapper;
+import com.codex.model.Post;
 import com.codex.model.User;
+import com.codex.service.PostService;
 import com.codex.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,16 +42,24 @@ class UserControllerTest {
 	private static final String ENDPOINT_CREATE_USER = "/user";
 	private static final String ENDPOINT_GET_USER = "/user";
 	private static final String ENDPOINT_DELETE_USER = "/user";
+	private static final String ENDPOINT_UPDATE_USER = "/user";
+	private static final String ENDPOINT_GET_USERPOSTS = "/user/posts";
+	private static final String ENDPOINT_CREATE_USERPOSTS = "/user/posts";
 
 	@InjectMocks
 	private UserController userController;
 
-	@Mock
+	@Mock(answer = Answers.RETURNS_DEEP_STUBS)
 	private UserService userService;
 
 	@Mock
+	private PostService postService;
+	
+	@Mock
 	private UserMapper userMapper;
 
+	@Mock
+	private UserPostMapper userPostMapper;
 	private MockMvc mockMvc;
 	private ObjectMapper objectMapper;
 
@@ -62,6 +76,7 @@ class UserControllerTest {
 		mockMvc = null;
 		userController = null;
 		userService = null;
+
 	}
 
 	@Test
@@ -101,8 +116,7 @@ class UserControllerTest {
 	@DisplayName("createUser() returns response status 400 on invalid request")
 	void createUserReturns400OnInvalidRequest() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USER)
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.accept(MediaType.APPLICATION_JSON_VALUE);
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
 		when(userService.create(any())).thenReturn(new User());
 		mockMvc.perform(request).andExpect(status().isBadRequest());
 	}
@@ -139,7 +153,7 @@ class UserControllerTest {
 
 	@Test
 	@DisplayName("deleteUser() returns response status 200 on successful service call")
-	void testDeleteUserReturns200OnSuccessfulServiceCall() throws Exception {
+	void deleteUserReturns200OnSuccessfulServiceCall() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(ENDPOINT_DELETE_USER)
 				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
@@ -148,12 +162,76 @@ class UserControllerTest {
 
 	@Test
 	@DisplayName("deleteUser() returns 404 when data not found")
-	void testDeleteUserReturns404OnWhenDataNotFound() throws Exception {
+	void deleteUserReturns404OnWhenDataNotFound() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(ENDPOINT_DELETE_USER)
 				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
 		doThrow(EmptyResultDataAccessException.class).when(userService).delete(anyInt());
 		mockMvc.perform(request).andExpect(status().isNotFound());
+	}
+
+	@Test
+	void updateUserReturns200OnSuccessfulServiceCall() throws Exception {
+		UserRequest userRequest = getUserRequest();
+		String requestBody = objectMapper.writeValueAsString(userRequest);
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(ENDPOINT_UPDATE_USER).queryParam("id", "5")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
+				.accept(MediaType.APPLICATION_JSON_VALUE);
+		mockMvc.perform(request).andExpect(status().isOk());
+	}
+
+	@Test
+	void allPostsReturns200OnSuccessfulServiceCall() throws Exception {
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_USERPOSTS).queryParam("id", "5")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
+		when(userService.findById(anyInt()).getPosts()).thenReturn(getPostList());
+		mockMvc.perform(request).andExpect(status().isOk());
+	}
+
+	@Test
+	void createUserPostReturns200OnSuccessfulServiceCall() throws Exception {
+		UserPostRequest userPostRequest = getUserPostRequest();
+		String requestBody = objectMapper.writeValueAsString(userPostRequest);
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USERPOSTS)
+				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
+				.accept(MediaType.APPLICATION_JSON_VALUE);
+		when(userService.findById(anyInt())).thenReturn(getUser());
+		when(userPostMapper.convertToEntity(any())).thenReturn(getPost());
+		when(postService.create(any())).thenReturn(getPost());
+		mockMvc.perform(request).andExpect(status().isCreated());
+	}
+	
+	@Test
+	void createUserPostReturnsNull() throws Exception {
+		UserPostRequest userPostRequest = getUserPostRequest();
+		String requestBody = objectMapper.writeValueAsString(userPostRequest);
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USERPOSTS)
+				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
+				.accept(MediaType.APPLICATION_JSON_VALUE);
+		when(userService.findById(anyInt())).thenReturn(null);
+		mockMvc.perform(request).andExpect(status().isNotFound());
+	}
+
+	private Post getPost() {
+		Post post=new Post();
+		post.setId(1);
+		post.setUserPosts("Dummy Post");
+		return post;
+	}
+
+	private UserPostRequest getUserPostRequest() {
+		UserPostRequest userPostRequest = new UserPostRequest();
+		userPostRequest.setUserPosts("Test");
+		return userPostRequest;
+	}
+
+	private List<Post> getPostList() {
+		List<Post> listOfPosts = new ArrayList<>();
+		Post post = new Post();
+		post.setId(1);
+		post.setUserPosts("Test Post");
+		listOfPosts.add(post);
+		return listOfPosts;
 	}
 
 	private UserRequest getUserRequest() {
