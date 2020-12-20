@@ -64,7 +64,6 @@ sonarqube {
     property "sonar.binaries", "build/classes"
     property "sonar.tests", "junit"
     property "sonar.dynamicAnalysis", "reuseReports"
-	property "sonar.junit.reportsPath", "build/test-result/test"
 	property "sonar.java.coveragePlugin", "jacoco"
 	property "sonar.jacoco.reportPath", "build/customJacocoReportDir/test/jacoco.exec"
 	property "sonar.coverage.jacoco.xmlReportPaths", "/build/reports/jacoco/report.xml"
