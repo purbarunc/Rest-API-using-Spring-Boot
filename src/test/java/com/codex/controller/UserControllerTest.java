@@ -56,7 +56,7 @@ class UserControllerTest {
 
 	@Mock
 	private PostService postService;
-	
+
 	@Mock
 	private UserMapper userMapper;
 
@@ -78,11 +78,10 @@ class UserControllerTest {
 		mockMvc = null;
 		userController = null;
 		userService = null;
-
 	}
 
 	@Test
-	@DisplayName("allUsers() returns response status 200 in successful service call")
+	@DisplayName("allUsers() gives response status 200 in successful service call")
 	void allUsersReturn200OnSuccessfulServiceCall() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_ALL_USERS)
 				.accept(MediaType.APPLICATION_JSON_VALUE);
@@ -90,7 +89,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("createUser() returns response status 201 on successful service call")
+	@DisplayName("createUser() gives response status 201 on successful service call")
 	void testCreateUserReturns201OnSuccessfulServiceCall() throws Exception {
 		UserRequest userRequest = getUserRequest();
 		String requestBody = objectMapper.writeValueAsString(userRequest);
@@ -115,7 +114,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("createUser() returns response status 400 on invalid request")
+	@DisplayName("createUser() gives response status 400 on invalid request")
 	void createUserReturns400OnInvalidRequest() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
@@ -124,7 +123,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("getUser() returns response status 200 on successful service call")
+	@DisplayName("getUser() gives response status 200 on successful service call")
 	void getUserReturns200OnSuccessfulServiceCall() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).queryParam("id", "10")
@@ -134,7 +133,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("getUser() returns response status 404 when user is not found")
+	@DisplayName("getUser() gives response status 404 when user is not found")
 	void getUserReturns404whenUserIsNotFound() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).queryParam("id", "1")
@@ -144,7 +143,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("getUser() returns response status 500 when some exception occurs")
+	@DisplayName("getUser() gives response status 500 when some exception occurs")
 	void getUserReturns500whenSomeExceptionOccurs() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).queryParam("id", "1")
@@ -163,7 +162,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("deleteUser() returns 404 when data not found")
+	@DisplayName("deleteUser() gives response status 404 when data not found")
 	void deleteUserReturns404OnWhenDataNotFound() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(ENDPOINT_DELETE_USER)
 				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -173,6 +172,7 @@ class UserControllerTest {
 	}
 
 	@Test
+	@DisplayName("updateUser() gives response status 200 on successful Service call")
 	void updateUserReturns200OnSuccessfulServiceCall() throws Exception {
 		UserRequest userRequest = getUserRequest();
 		String requestBody = objectMapper.writeValueAsString(userRequest);
@@ -183,6 +183,7 @@ class UserControllerTest {
 	}
 
 	@Test
+	@DisplayName("allPosts() gives response status 200 on successful service call")
 	void allPostsReturns200OnSuccessfulServiceCall() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ENDPOINT_GET_USERPOSTS).queryParam("id", "5")
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
@@ -191,6 +192,7 @@ class UserControllerTest {
 	}
 
 	@Test
+	@DisplayName("createUserPost() gives response status 201 on successful service call")
 	void createUserPostReturns200OnSuccessfulServiceCall() throws Exception {
 		UserPostRequest userPostRequest = getUserPostRequest();
 		String requestBody = objectMapper.writeValueAsString(userPostRequest);
@@ -202,8 +204,9 @@ class UserControllerTest {
 		when(postService.create(any())).thenReturn(getPost());
 		mockMvc.perform(request).andExpect(status().isCreated());
 	}
-	
+
 	@Test
+	@DisplayName("createUserPost() gives response status 404 when user not found")
 	void createUserPostReturnsNull() throws Exception {
 		UserPostRequest userPostRequest = getUserPostRequest();
 		String requestBody = objectMapper.writeValueAsString(userPostRequest);
@@ -215,41 +218,24 @@ class UserControllerTest {
 	}
 
 	private Post getPost() {
-		Post post=new Post();
-		post.setId(1);
-		post.setUserPosts("Dummy Post");
-		return post;
+		return Post.builder().id(1).userPosts("Dummy Post").build();
 	}
 
 	private UserPostRequest getUserPostRequest() {
-		UserPostRequest userPostRequest = new UserPostRequest();
-		userPostRequest.setUserPosts("Test");
-		return userPostRequest;
+		return UserPostRequest.builder().userPosts("Test").build();
 	}
 
 	private List<Post> getPostList() {
 		List<Post> listOfPosts = new ArrayList<>();
-		Post post = new Post();
-		post.setId(1);
-		post.setUserPosts("Test Post");
-		listOfPosts.add(post);
+		listOfPosts.add(Post.builder().id(1).userPosts("Test Post").build());
 		return listOfPosts;
 	}
 
 	private UserRequest getUserRequest() {
-		UserRequest userRequest = new UserRequest();
-		userRequest.setName("Ashish");
-		userRequest.setAge(35);
-		userRequest.setCity("Kota");
-		return userRequest;
+		return UserRequest.builder().name("Ashish").age(35).city("Kota").build();
 	}
 
 	private User getUser() {
-		User user = new User();
-		user.setName("Ashish");
-		user.setAge(35);
-		user.setCity("Kota");
-		return user;
+		return User.builder().name("Ashish").age(35).city("Kota").build();
 	}
-
 }
