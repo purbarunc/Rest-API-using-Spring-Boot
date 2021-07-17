@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.codex.model.Post;
-import com.codex.model.User;
+import com.codex.model.Users;
 import com.codex.repository.PostRepository;
 
 @SpringBootTest
@@ -31,7 +31,7 @@ class PostServiceImplTest {
 	}
 
 	private Post getPost() {
-		return Post.builder().id(100).userPosts("Test  Post").users(mock(User.class)).build();
+		return Post.builder().id(100).userPosts("Test  Post").users(mock(Users.class)).build();
 	}
 
 }

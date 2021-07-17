@@ -26,14 +26,14 @@ import com.codex.httpresponse.SuccessResponse;
 import com.codex.mapper.UserMapper;
 import com.codex.mapper.UserPostMapper;
 import com.codex.model.Post;
-import com.codex.model.User;
+import com.codex.model.Users;
 import com.codex.service.PostService;
-import com.codex.service.UserService;
+import com.codex.service.UsersService;
 
 @RestController
 public class UserController {
 	@Autowired
-	private UserService userService;
+	private UsersService userService;
 
 	@Autowired
 	private PostService postService;
@@ -45,25 +45,25 @@ public class UserController {
 	private UserPostMapper userPostMapper;
 
 	@GetMapping("/users")
-	public ResponseEntity<List<User>> allUsers() {
+	public ResponseEntity<List<Users>> allUsers() {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/user")
-	public ResponseEntity<User> getUser(@RequestParam("id") int userId) {
+	public ResponseEntity<Users> getUser(@RequestParam("id") int userId) {
 		return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
 	}
 
 	@PostMapping("/user")
-	public ResponseEntity<User> createUser(@NotNull @Valid @RequestBody UserRequest userRequest) {
-		User user=mapUserDTOToEntity(userRequest);
+	public ResponseEntity<Users> createUser(@NotNull @Valid @RequestBody UserRequest userRequest) {
+		Users user=mapUserDTOToEntity(userRequest);
 		return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/user")
 	public ResponseEntity<HttpResponse> updateUser(@NotNull @Valid @RequestBody UserRequest userRequest, @RequestParam("id") int userId) {
 		userRequest.setId(userId);
-		User user=mapUserDTOToEntity(userRequest);
+		Users user=mapUserDTOToEntity(userRequest);
 		userService.update(user, userId);
 		return new ResponseEntity<>(new SuccessResponse(String.format("User id=%d has been updated", userId)),
 				HttpStatus.OK);
@@ -89,7 +89,7 @@ public class UserController {
 	@PostMapping("/user/posts")
 	public ResponseEntity<Post> createUserPost(@RequestParam("id") int userId, @NotNull @RequestBody UserPostRequest userPostRequest) {
 		Post post=userPostMapper.convertToEntity(userPostRequest);
-		User user = userService.findById(userId);
+		Users user = userService.findById(userId);
 		if (user == null) {
 			throw new UserNotFoundException("id: " + userId);
 		}
@@ -97,7 +97,7 @@ public class UserController {
 		return new ResponseEntity<>(postService.create(post), HttpStatus.CREATED);
 	}
 	
-	private User mapUserDTOToEntity(UserRequest userRequest) {
+	private Users mapUserDTOToEntity(UserRequest userRequest) {
 		return userMapper.convertToEntity(userRequest);
 	}
 }

@@ -5,32 +5,32 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.codex.exception.UserNotFoundException;
-import com.codex.model.User;
-import com.codex.repository.UserRepository;
+import com.codex.model.Users;
+import com.codex.repository.UsersRepository;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UsersServiceImpl implements UsersService {
 	@Autowired
-	UserRepository userRepository;
+	UsersRepository userRepository;
 
 	@Override
-	public User findById(int userId) {
+	public Users findById(int userId) {
 		return userRepository.findById(userId).orElseThrow(
 				() -> new UserNotFoundException(String.format("User for the id %d is not available", userId)));
 	}
 
 	@Override
-	public List<User> findAll() {
+	public List<Users> findAll() {
 		return userRepository.findAll();
 	}
 
 	@Override
-	public User create(User user) {
+	public Users create(Users user) {
 		return userRepository.save(user);
 	}
 
 	@Override
-	public void update(User user, int userId) {
+	public void update(Users user, int userId) {
 		userRepository.save(user);
 	}
 

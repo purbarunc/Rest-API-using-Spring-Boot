@@ -31,9 +31,9 @@ import com.codex.exception.UserNotFoundException;
 import com.codex.mapper.UserMapper;
 import com.codex.mapper.UserPostMapper;
 import com.codex.model.Post;
-import com.codex.model.User;
+import com.codex.model.Users;
 import com.codex.service.PostService;
-import com.codex.service.UserService;
+import com.codex.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -50,7 +50,7 @@ class UserControllerTest {
 	private UserController userController;
 
 	@Mock(answer = Answers.RETURNS_DEEP_STUBS)
-	private UserService userService;
+	private UsersService userService;
 
 	@Mock
 	private PostService postService;
@@ -116,7 +116,7 @@ class UserControllerTest {
 	void createUserReturns400OnInvalidRequest() throws Exception {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ENDPOINT_CREATE_USER)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
-		when(userService.create(any())).thenReturn(new User());
+		when(userService.create(any())).thenReturn(new Users());
 		mockMvc.perform(request).andExpect(status().isBadRequest());
 	}
 
@@ -233,7 +233,7 @@ class UserControllerTest {
 		return UserRequest.builder().name("Ashish").age(35).city("Kota").build();
 	}
 
-	private User getUser() {
-		return User.builder().name("Ashish").age(35).city("Kota").build();
+	private Users getUser() {
+		return Users.builder().name("Ashish").age(35).city("Kota").build();
 	}
 }

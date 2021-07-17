@@ -40,7 +40,7 @@ public class Post {
 	@JsonIgnore
 	@Getter
 	@Setter
-	private User users;
+	private Users users;
 
 	@Override
 	public String toString() {

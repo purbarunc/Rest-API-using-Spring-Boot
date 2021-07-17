@@ -19,16 +19,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.codex.model.User;
-import com.codex.repository.UserRepository;
+import com.codex.model.Users;
+import com.codex.repository.UsersRepository;
 
 @SpringBootTest
-class UserServiceImplTest {
+class UsersServiceImplTest {
 	@InjectMocks
-	private UserServiceImpl userServiceImpl;
+	private UsersServiceImpl userServiceImpl;
 
 	@Mock
-	private UserRepository userRepository;
+	private UsersRepository userRepository;
 
 	@BeforeEach
 	public void testSetup() {
@@ -46,8 +46,8 @@ class UserServiceImplTest {
 	@Test
 	@DisplayName("findAll is successful")
 	void findAll() {
-		List<User> mockList = new ArrayList<>();
-		mockList.add(mock(User.class));
+		List<Users> mockList = new ArrayList<>();
+		mockList.add(mock(Users.class));
 		when(userRepository.findAll()).thenReturn(mockList);
 		userServiceImpl.findAll();
 		verify(userRepository,times(1)).findAll();
@@ -57,14 +57,14 @@ class UserServiceImplTest {
 	@DisplayName("create is successful")
 	void create() {	
 		when(userRepository.save(any())).thenReturn(getUser());
-		userServiceImpl.create(mock(User.class));
+		userServiceImpl.create(mock(Users.class));
 		verify(userRepository,times(1)).save(any());
 	}
 	
 	@Test
 	@DisplayName("update is successful")
 	void update() {	
-		userServiceImpl.update(mock(User.class),1);
+		userServiceImpl.update(mock(Users.class),1);
 		verify(userRepository,times(1)).save(any());
 	}
 	
@@ -74,7 +74,7 @@ class UserServiceImplTest {
 		userServiceImpl.delete(1);
 		verify(userRepository,times(1)).deleteById(anyInt());
 	}
-	private User getUser() {
-		return User.builder().name("Ashish").age(35).city("Kota").build();
+	private Users getUser() {
+		return Users.builder().name("Ashish").age(35).city("Kota").build();
 	}
 }

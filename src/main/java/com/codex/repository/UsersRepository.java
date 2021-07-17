@@ -3,8 +3,8 @@ package com.codex.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.codex.model.User;
+import com.codex.model.Users;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer>{
+public interface UsersRepository extends JpaRepository<Users, Integer>{
 }

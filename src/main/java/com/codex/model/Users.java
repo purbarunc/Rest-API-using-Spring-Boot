@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "Usertbl")
 @DynamicUpdate
 @ApiModel(description = "Details about the User")
-public class User {
+public class Users {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "USERID")
