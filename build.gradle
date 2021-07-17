@@ -43,6 +43,9 @@ dependencies {
 }
 
 test {
+	doFirst {
+		systemProperty 'spring.profiles.active', 'local'
+	}
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport // report is always generated after tests run
 }

@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "title",
+    "type": "java.lang.String",
+    "description": "A description for 'title'"
+  },
+  {
+    "name": "description",
+    "type": "java.lang.String",
+    "description": "A description for 'description'"
+  },
+  {
+    "name": "version",
+    "type": "java.lang.String",
+    "description": "A description for 'version'"
+  },
+  {
+    "name": "license",
+    "type": "java.lang.String",
+    "description": "A description for 'license'"
+  },
+  {
+    "name": "name",
+    "type": "java.lang.String",
+    "description": "A description for 'name'"
+  },
+  {
+    "name": "url",
+    "type": "java.lang.String",
+    "description": "A description for 'url'"
+  },
+  {
+    "name": "email",
+    "type": "java.lang.String",
+    "description": "A description for 'email'"
+  }
+]}
