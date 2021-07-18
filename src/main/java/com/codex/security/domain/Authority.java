@@ -8,12 +8,9 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import lombok.Data;
-
 @Entity
-@Data
 public class Authority implements GrantedAuthority {
-	private static final long serialVersionUID = -1143904092089141445L;
+	private static final long serialVersionUID = -2884724941267355100L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +24,35 @@ public class Authority implements GrantedAuthority {
 	@Override
 	public String getAuthority() {
 		return this.authority;
+	}
+
+	@Override
+	public String toString() {
+		return "Authority [authority=" + authority + "]";
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setAuthority(String authority) {
+		this.authority = authority;
 	}
 
 }
