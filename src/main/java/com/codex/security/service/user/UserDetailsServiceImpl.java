@@ -1,4 +1,4 @@
-package com.codex.security.service;
+package com.codex.security.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

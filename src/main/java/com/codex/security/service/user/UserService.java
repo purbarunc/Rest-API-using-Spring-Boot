@@ -1,4 +1,4 @@
-package com.codex.security.service;
+package com.codex.security.service.user;
 
 import com.codex.security.domain.User;
 
