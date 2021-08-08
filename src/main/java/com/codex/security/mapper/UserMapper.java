@@ -1,19 +1,18 @@
-package com.codex.mapper;
+package com.codex.security.mapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.codex.dto.UserRequest;
-import com.codex.model.Users;
+import com.codex.security.domain.User;
+import com.codex.security.dto.SignupRequest;
 
 @Component
 public class UserMapper {
 	@Autowired
     private ModelMapper modelMapper;
 
-	public Users convertToEntity(UserRequest userInfoRequest) {
-		return modelMapper.map(userInfoRequest, Users.class);
-        
+	public User convertToEntity(SignupRequest signupRequest) {
+		return modelMapper.map(signupRequest, User.class);        
 	}
 }

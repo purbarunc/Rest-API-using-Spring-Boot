@@ -21,11 +21,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Userposts")
+@Table(name = "posts")
 public class Post {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "POSTID")
+	@Column(name = "ID")
 	@Getter
 	@Setter
 	private int id;
@@ -34,17 +34,17 @@ public class Post {
 	@Size(min = 10, max = 200, message = "About Me must be between 10 and 200 characters")
 	@Getter
 	@Setter
-	private String userPosts;
+	private String posts;
 
 	@ManyToOne
 	@JsonIgnore
 	@Getter
 	@Setter
-	private Users users;
+	private Student student;
 
 	@Override
 	public String toString() {
-		return "Post [id=" + id + ", post=" + userPosts + "]";
+		return "Post [id=" + id + ", post=" + posts + "]";
 	}
 
 }

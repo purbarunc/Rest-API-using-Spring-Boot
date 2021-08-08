@@ -1,6 +1,7 @@
 package com.codex.security.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,11 +16,12 @@ import com.codex.security.dto.AuthenticationResponse;
 import com.codex.security.service.jwt.JwtTokenService;
 
 @RestController
+@Profile("!local")
 public class JwtController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@Autowired
+	@Autowired(required=false)
 	private JwtTokenService jwtTokenService;
 
 	@Autowired

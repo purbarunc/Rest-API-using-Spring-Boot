@@ -37,7 +37,7 @@ public class SwaggerConfiguration {
 	private String contactEmail;
 
 	@Bean
-	public Docket userApi() {
+	public Docket studentApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.codex.controller")).build().apiInfo(apiDetails());
 	}

@@ -1,7 +1,5 @@
 package com.codex.dto;
 
-import com.codex.model.Users;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPostRequest {
-	private int id;
-	private String userPosts;
-	private Users users;
+public class StudentRequest {
+	private String name;
+	private int age;
+	private String city;
 }

@@ -33,5 +33,10 @@
     "name": "email",
     "type": "java.lang.String",
     "description": "A description for 'email'"
+  },
+  {
+    "name": "jwt.secret.key",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret.key'"
   }
 ]}
