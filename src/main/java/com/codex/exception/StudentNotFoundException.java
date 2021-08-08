@@ -1,9 +1,9 @@
 package com.codex.exception;
 
-public class UserNotFoundException extends RuntimeException{
+public class StudentNotFoundException extends RuntimeException{
 	private static final long serialVersionUID = 2842697592513138469L;
 
-	public UserNotFoundException(String message) {
+	public StudentNotFoundException(String message) {
 		super(message);
 	}
 }

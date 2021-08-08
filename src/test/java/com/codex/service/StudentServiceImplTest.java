@@ -19,16 +19,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.codex.model.User;
-import com.codex.repository.UserRepository;
+import com.codex.model.Student;
+import com.codex.repository.StudentRepository;
 
 @SpringBootTest
-class UserServiceImplTest {
+class StudentServiceImplTest {
 	@InjectMocks
-	private UserServiceImpl userServiceImpl;
+	private StudentServiceImpl studentServiceImpl;
 
 	@Mock
-	private UserRepository userRepository;
+	private StudentRepository studentRepository;
 
 	@BeforeEach
 	public void testSetup() {
@@ -38,43 +38,43 @@ class UserServiceImplTest {
 	@Test
 	@DisplayName("findById is successful")
 	void findById() {
-		when(userRepository.findById(anyInt())).thenReturn(Optional.of(getUser()));
-		assertEquals(getUser(), userServiceImpl.findById(1));
-		verify(userRepository,times(1)).findById(anyInt());
+		when(studentRepository.findById(anyInt())).thenReturn(Optional.of(getStudent()));
+		assertEquals(getStudent(), studentServiceImpl.findById(1));
+		verify(studentRepository,times(1)).findById(anyInt());
 	}
 	
 	@Test
 	@DisplayName("findAll is successful")
 	void findAll() {
-		List<User> mockList = new ArrayList<>();
-		mockList.add(mock(User.class));
-		when(userRepository.findAll()).thenReturn(mockList);
-		userServiceImpl.findAll();
-		verify(userRepository,times(1)).findAll();
+		List<Student> mockList = new ArrayList<>();
+		mockList.add(mock(Student.class));
+		when(studentRepository.findAll()).thenReturn(mockList);
+		studentServiceImpl.findAll();
+		verify(studentRepository,times(1)).findAll();
 	}
 	
 	@Test
 	@DisplayName("create is successful")
 	void create() {	
-		when(userRepository.save(any())).thenReturn(getUser());
-		userServiceImpl.create(mock(User.class));
-		verify(userRepository,times(1)).save(any());
+		when(studentRepository.save(any())).thenReturn(getStudent());
+		studentServiceImpl.create(mock(Student.class));
+		verify(studentRepository,times(1)).save(any());
 	}
 	
 	@Test
 	@DisplayName("update is successful")
 	void update() {	
-		userServiceImpl.update(mock(User.class),1);
-		verify(userRepository,times(1)).save(any());
+		studentServiceImpl.update(mock(Student.class));
+		verify(studentRepository,times(1)).save(any());
 	}
 	
 	@Test
 	@DisplayName("delete is successful")
 	void delete() {	
-		userServiceImpl.delete(1);
-		verify(userRepository,times(1)).deleteById(anyInt());
+		studentServiceImpl.delete(1);
+		verify(studentRepository,times(1)).deleteById(anyInt());
 	}
-	private User getUser() {
-		return User.builder().name("Ashish").age(35).city("Kota").build();
+	private Student getStudent() {
+		return Student.builder().name("Ashish").age(35).city("Kota").build();
 	}
 }
