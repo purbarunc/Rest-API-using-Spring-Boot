@@ -1,10 +1,7 @@
 package com.codex.security.util;
 
-import java.util.Set;
-
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.codex.security.domain.Authority;
 import com.codex.security.domain.User;
 
 public class CustomSecuredUser extends User implements UserDetails {
@@ -18,21 +15,6 @@ public class CustomSecuredUser extends User implements UserDetails {
 		this.setName(user.getName());
 		this.setPassword(user.getPassword());
 		this.setUsername(user.getUsername());
-	}
-
-	@Override
-	public Set<Authority> getAuthorities() {
-		return super.getAuthorities();
-	}
-
-	@Override
-	public String getPassword() {
-		return super.getPassword();
-	}
-
-	@Override
-	public String getUsername() {
-		return super.getUsername();
 	}
 
 	@Override

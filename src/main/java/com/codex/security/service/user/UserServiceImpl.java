@@ -11,7 +11,7 @@ import com.codex.security.repository.UserRepository;
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
-	private UserRepository UserRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -21,9 +21,9 @@ public class UserServiceImpl implements UserService {
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
 		Authority authority = new Authority();
-		authority.setAuthority("ROLE_USER");
+		authority.setAuthorityRole("ROLE_USER");
 		authority.setUser(user);
 		user.getAuthorities().add(authority);
-		return UserRepository.save(user);
+		return userRepository.save(user);
 	}
 }

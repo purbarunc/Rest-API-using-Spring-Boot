@@ -16,19 +16,19 @@ public class Authority implements GrantedAuthority {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	private String authority;
+	private String authorityRole;
 
 	@ManyToOne
 	private User user;
 
 	@Override
 	public String getAuthority() {
-		return this.authority;
+		return this.authorityRole;
 	}
 
 	@Override
 	public String toString() {
-		return "Authority [authority=" + authority + "]";
+		return "Authority [authority=" + authorityRole + "]";
 	}
 
 	public int getId() {
@@ -51,8 +51,8 @@ public class Authority implements GrantedAuthority {
 		return serialVersionUID;
 	}
 
-	public void setAuthority(String authority) {
-		this.authority = authority;
+	public void setAuthorityRole(String authority) {
+		this.authorityRole = authority;
 	}
 
 }

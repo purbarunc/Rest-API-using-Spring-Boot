@@ -157,7 +157,7 @@ class StudentControllerTest {
 	}
 
 	@Test
-	@Disabled
+	@Disabled("test case failing")
 	@DisplayName("updateStudent() gives response status 200 on successful Service call")
 	void updateStudentReturns200OnSuccessfulServiceCall() throws Exception {
 		StudentRequest studentRequest = getStudentRequest();

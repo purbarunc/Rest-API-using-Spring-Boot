@@ -1,5 +1,6 @@
 package com.codex.security.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements Serializable {
+	private static final long serialVersionUID = -4992088460930064857L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
