@@ -30,6 +30,16 @@ public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+	private static final String[] WHITELIST_URLS = {
+			// -- Swagger UI v2
+			"/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+			"/configuration/security", "/swagger-ui.html", "/webjars/**",
+			// -- Swagger UI v3 (OpenAPI)
+			"/v3/api-docs/**", "/swagger-ui/**",
+			// other public endpoints 
+			"/authenticate","/signup"
+	};
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -37,7 +47,7 @@ public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/authenticate","/signup").permitAll().anyRequest().authenticated()
+		http.csrf().disable().authorizeRequests().antMatchers(WHITELIST_URLS).permitAll().anyRequest().authenticated()
 				.and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
