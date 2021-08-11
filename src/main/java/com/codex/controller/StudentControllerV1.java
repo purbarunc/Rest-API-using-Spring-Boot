@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,20 +32,21 @@ import com.codex.service.PostService;
 import com.codex.service.StudentService;
 
 @RestController
-public class StudentController {
+@RequestMapping("/v1")
+public class StudentControllerV1 {
 	@Autowired
 	private StudentService studentService;
 
 	@Autowired
 	private PostService postService;
-	
+
 	@Autowired
 	private StudentMapper studentMapper;
-	
+
 	@Autowired
 	private StudentPostMapper studentPostMapper;
 
-	@GetMapping("/students")
+	@GetMapping("/v1/students")
 	public ResponseEntity<List<Student>> allStudents() {
 		return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
 	}
@@ -56,13 +58,14 @@ public class StudentController {
 
 	@PostMapping("/student")
 	public ResponseEntity<Student> createStudent(@NotNull @Valid @RequestBody StudentRequest studentRequest) {
-		Student student=mapStudentDTOToEntity(studentRequest);
+		Student student = mapStudentDTOToEntity(studentRequest);
 		return new ResponseEntity<>(studentService.create(student), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/student")
-	public ResponseEntity<HttpResponse> updateStudent(@NotNull @Valid @RequestBody StudentRequest studentRequest, @RequestParam("id") int studentId) {
-		Student student=mapStudentDTOToEntity(studentRequest);
+	public ResponseEntity<HttpResponse> updateStudent(@NotNull @Valid @RequestBody StudentRequest studentRequest,
+			@RequestParam("id") int studentId) {
+		Student student = mapStudentDTOToEntity(studentRequest);
 		student.setId(studentId);
 		studentService.update(student);
 		return new ResponseEntity<>(new SuccessResponse(String.format("Student id=%d has been updated", studentId)),
@@ -73,8 +76,8 @@ public class StudentController {
 	public ResponseEntity<HttpResponse> deleteStudent(@RequestParam("id") int studentId) {
 		try {
 			studentService.delete(studentId);
-			return new ResponseEntity<>(new SuccessResponse(String.format("Student id=%d succesfully deleted", studentId)),
-					HttpStatus.OK);
+			return new ResponseEntity<>(
+					new SuccessResponse(String.format("Student id=%d succesfully deleted", studentId)), HttpStatus.OK);
 		} catch (EmptyResultDataAccessException e) {
 			return new ResponseEntity<>(new ErrorResponse(String.format("Student id=%d not found", studentId)),
 					HttpStatus.NOT_FOUND);
@@ -87,8 +90,9 @@ public class StudentController {
 	}
 
 	@PostMapping("/student/posts")
-	public ResponseEntity<Post> createStudentPost(@RequestParam("id") int studentId, @NotNull @RequestBody StudentPostRequest studentPostRequest) {
-		Post post=studentPostMapper.convertToEntity(studentPostRequest);
+	public ResponseEntity<Post> createStudentPost(@RequestParam("id") int studentId,
+			@NotNull @RequestBody StudentPostRequest studentPostRequest) {
+		Post post = studentPostMapper.convertToEntity(studentPostRequest);
 		Student student = studentService.findById(studentId);
 		if (student == null) {
 			throw new StudentNotFoundException("id: " + studentId);
@@ -96,7 +100,7 @@ public class StudentController {
 		post.setStudent(student);
 		return new ResponseEntity<>(postService.create(post), HttpStatus.CREATED);
 	}
-	
+
 	private Student mapStudentDTOToEntity(StudentRequest studentRequest) {
 		return studentMapper.convertToEntity(studentRequest);
 	}

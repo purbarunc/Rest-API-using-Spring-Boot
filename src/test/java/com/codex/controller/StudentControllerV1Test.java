@@ -37,7 +37,7 @@ import com.codex.service.StudentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
-class StudentControllerTest {
+class StudentControllerV1Test {
 	private static final String ENDPOINT_GET_ALL_STUDENTS = "/students";
 	private static final String ENDPOINT_CREATE_STUDENT = "/student";
 	private static final String ENDPOINT_GET_STUDENT = "/student";
@@ -47,7 +47,7 @@ class StudentControllerTest {
 	private static final String ENDPOINT_CREATE_STUDENTPOSTS = "/student/posts";
 
 	@InjectMocks
-	private StudentController studentController;
+	private StudentControllerV1 studentController;
 
 	@Mock(answer = Answers.RETURNS_DEEP_STUBS)
 	private StudentService studentService;
