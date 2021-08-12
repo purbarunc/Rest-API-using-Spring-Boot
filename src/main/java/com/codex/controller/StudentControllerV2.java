@@ -30,17 +30,23 @@ public class StudentControllerV2 {
 		List<Student> students = studentService.findAll();
 		students.forEach(student -> {
 			student.add(linkTo(methodOn(StudentControllerV2.class).getStudent(student.getId())).withSelfRel());
-			student.add(linkTo(methodOn(StudentControllerV2.class).allPosts(student.getId())).withRel("postsstudent"));
+			if (!student.getPosts().isEmpty()) {
+				student.add(
+						linkTo(methodOn(StudentControllerV2.class).allPosts(student.getId())).withRel("studentposts"));
+			}
 		});
 		Link allStudentsLink = linkTo(methodOn(StudentControllerV2.class).getAllStudents()).withSelfRel();
 		return new ResponseEntity<>(CollectionModel.of(students, allStudentsLink), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/student/posts")
-	public ResponseEntity<List<Post>> allPosts(@RequestParam("id") int studentId) {
-		return new ResponseEntity<>(studentService.findById(studentId).getPosts(), HttpStatus.OK);
+	public ResponseEntity<CollectionModel<Post>> allPosts(@RequestParam("id") int studentId) {
+		List<Post> allPosts = studentService.findById(studentId).getPosts();
+		Link allStudentsLink = linkTo(methodOn(StudentControllerV2.class).getAllStudents()).withRel("students");
+		Link studentLink = linkTo(methodOn(StudentControllerV2.class).getStudent(studentId)).withRel("student");
+		return new ResponseEntity<>(CollectionModel.of(allPosts, studentLink, allStudentsLink), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/student")
 	public ResponseEntity<Student> getStudent(@RequestParam("id") int studentId) {
 		return new ResponseEntity<>(
