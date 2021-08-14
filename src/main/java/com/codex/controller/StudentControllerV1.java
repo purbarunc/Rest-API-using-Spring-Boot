@@ -46,7 +46,7 @@ public class StudentControllerV1 {
 	@Autowired
 	private StudentPostMapper studentPostMapper;
 
-	@GetMapping("/v1/students")
+	@GetMapping("/students")
 	public ResponseEntity<List<Student>> allStudents() {
 		return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
 	}

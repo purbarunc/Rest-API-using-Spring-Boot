@@ -1,6 +1,9 @@
 package com.codex.security.configuration;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,14 +19,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.codex.security.filter.JwtRequestFilter;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableWebSecurity
+@ConditionalOnProperty(name = "app.security.enable", havingValue = "jwt")
 public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+	
+	@PostConstruct
+	void init() {
+		log.info("Using JWT as Authentication process!");
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -36,9 +48,8 @@ public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			"/configuration/security", "/swagger-ui.html", "/webjars/**",
 			// -- Swagger UI v3 (OpenAPI)
 			"/v3/api-docs/**", "/swagger-ui/**",
-			// other public endpoints 
-			"/authenticate","/signup"
-	};
+			// other public endpoints
+			"/authenticate", "/signup" };
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

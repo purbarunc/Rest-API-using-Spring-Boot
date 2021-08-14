@@ -38,13 +38,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 class StudentControllerV1Test {
-	private static final String ENDPOINT_GET_ALL_STUDENTS = "/students";
-	private static final String ENDPOINT_CREATE_STUDENT = "/student";
-	private static final String ENDPOINT_GET_STUDENT = "/student";
-	private static final String ENDPOINT_DELETE_STUDENT = "/student";
-	private static final String ENDPOINT_UPDATE_STUDENT = "/student";
-	private static final String ENDPOINT_GET_STUDENTPOSTS = "/student/posts";
-	private static final String ENDPOINT_CREATE_STUDENTPOSTS = "/student/posts";
+	private static final String ENDPOINT_GET_ALL_STUDENTS = "/v1/students";
+	private static final String ENDPOINT_CREATE_STUDENT = "/v1/student";
+	private static final String ENDPOINT_GET_STUDENT = "/v1/student";
+	private static final String ENDPOINT_DELETE_STUDENT = "/v1/student";
+	private static final String ENDPOINT_UPDATE_STUDENT = "/v1/student";
+	private static final String ENDPOINT_GET_STUDENTPOSTS = "/v1/student/posts";
+	private static final String ENDPOINT_CREATE_STUDENTPOSTS = "/v1/student/posts";
 
 	@InjectMocks
 	private StudentControllerV1 studentController;

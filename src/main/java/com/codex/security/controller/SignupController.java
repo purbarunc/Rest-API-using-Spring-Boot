@@ -4,7 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ import com.codex.security.mapper.UserMapper;
 import com.codex.security.service.user.UserService;
 
 @RestController
-@Profile("!local")
+@ConditionalOnProperty(name = "app.security.enable", havingValue = "jwt")
 public class SignupController {
 	@Autowired
 	private UserMapper userMapper;
