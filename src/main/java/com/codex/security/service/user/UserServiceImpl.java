@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
+	@Autowired(required = false)
 	private PasswordEncoder passwordEncoder;
 
 	@Override

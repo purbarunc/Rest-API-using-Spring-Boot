@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "posts")
-public class Post {
+public class Post extends RepresentationModel<Post>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

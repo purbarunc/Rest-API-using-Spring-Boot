@@ -2,6 +2,7 @@ package com.codex.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,23 +15,27 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "student")
 @DynamicUpdate
 @ApiModel(description = "Details about Students")
-public class Student {
+public class Student extends RepresentationModel<Student> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
@@ -52,6 +57,7 @@ public class Student {
 	@Column(name = "CITY")
 	private String city;
 
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "student", orphanRemoval = true, cascade = CascadeType.REMOVE)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	List<Post> posts;
 }

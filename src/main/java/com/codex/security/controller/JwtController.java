@@ -1,7 +1,7 @@
 package com.codex.security.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,19 +16,20 @@ import com.codex.security.dto.AuthenticationResponse;
 import com.codex.security.service.jwt.JwtTokenService;
 
 @RestController
-@Profile("!local")
+@ConditionalOnProperty(name = "app.security.enable", havingValue = "jwt")
 public class JwtController {
-	@Autowired
+	@Autowired(required = false)
 	private AuthenticationManager authenticationManager;
 
-	@Autowired(required=false)
+	@Autowired(required = false)
 	private JwtTokenService jwtTokenService;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
 
 	@PostMapping("/authenticate")
-	public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
+	public ResponseEntity<AuthenticationResponse> createAuthenticationToken(
+			@RequestBody AuthenticationRequest authenticationRequest) {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
 				authenticationRequest.getPassword()));
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());

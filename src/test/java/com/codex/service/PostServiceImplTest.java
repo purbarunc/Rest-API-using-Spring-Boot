@@ -11,11 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
 import com.codex.model.Post;
 import com.codex.model.Student;
 import com.codex.repository.PostRepository;
 
 @SpringBootTest
+@ActiveProfiles("local")
 class PostServiceImplTest {
 	@InjectMocks
 	private PostServiceImpl postServiceImpl;
