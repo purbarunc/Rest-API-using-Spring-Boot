@@ -1,5 +1,8 @@
 package com.codex.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -7,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,11 +36,10 @@ import com.codex.service.PostService;
 import com.codex.service.StudentService;
 
 @RestController
-@RequestMapping("/v1")
-public class StudentControllerV1 {
+public class StudentController {
 	@Autowired
 	private StudentService studentService;
-
+	
 	@Autowired
 	private PostService postService;
 
@@ -47,15 +50,35 @@ public class StudentControllerV1 {
 	private StudentPostMapper studentPostMapper;
 
 	@GetMapping("/students")
-	public ResponseEntity<List<Student>> allStudents() {
-		return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
+	public ResponseEntity<CollectionModel<Student>> getAllStudents() {
+		List<Student> students = studentService.findAll();
+		students.forEach(student -> {
+			student.add(linkTo(methodOn(StudentController.class).getStudent(student.getId())).withSelfRel());
+			if (!student.getPosts().isEmpty()) {
+				student.add(
+						linkTo(methodOn(StudentController.class).allPosts(student.getId())).withRel("studentposts"));
+			}
+		});
+		Link allStudentsLink = linkTo(methodOn(StudentController.class).getAllStudents()).withSelfRel();
+		return new ResponseEntity<>(CollectionModel.of(students, allStudentsLink), HttpStatus.OK);
+	}
+
+	@GetMapping("/student/posts")
+	public ResponseEntity<CollectionModel<Post>> allPosts(@RequestParam("id") int studentId) {
+		List<Post> allPosts = studentService.findById(studentId).getPosts();
+		Link allStudentsLink = linkTo(methodOn(StudentController.class).getAllStudents()).withRel("students");
+		Link studentLink = linkTo(methodOn(StudentController.class).getStudent(studentId)).withRel("student");
+		return new ResponseEntity<>(CollectionModel.of(allPosts, studentLink, allStudentsLink), HttpStatus.OK);
 	}
 
 	@GetMapping("/student")
 	public ResponseEntity<Student> getStudent(@RequestParam("id") int studentId) {
-		return new ResponseEntity<>(studentService.findById(studentId), HttpStatus.OK);
+		return new ResponseEntity<>(
+				studentService.findById(studentId)
+						.add(linkTo(methodOn(StudentController.class).getAllStudents()).withRel("students")),
+				HttpStatus.OK);
 	}
-
+	
 	@PostMapping("/student")
 	public ResponseEntity<Student> createStudent(@NotNull @Valid @RequestBody StudentRequest studentRequest) {
 		Student student = mapStudentDTOToEntity(studentRequest);
@@ -83,12 +106,7 @@ public class StudentControllerV1 {
 					HttpStatus.NOT_FOUND);
 		}
 	}
-
-	@GetMapping("/student/posts")
-	public ResponseEntity<List<Post>> allPosts(@RequestParam("id") int studentId) {
-		return new ResponseEntity<>(studentService.findById(studentId).getPosts(), HttpStatus.OK);
-	}
-
+	
 	@PostMapping("/student/posts")
 	public ResponseEntity<Post> createStudentPost(@RequestParam("id") int studentId,
 			@NotNull @RequestBody StudentPostRequest studentPostRequest) {
@@ -100,7 +118,7 @@ public class StudentControllerV1 {
 		post.setStudent(student);
 		return new ResponseEntity<>(postService.create(post), HttpStatus.CREATED);
 	}
-
+	
 	private Student mapStudentDTOToEntity(StudentRequest studentRequest) {
 		return studentMapper.convertToEntity(studentRequest);
 	}

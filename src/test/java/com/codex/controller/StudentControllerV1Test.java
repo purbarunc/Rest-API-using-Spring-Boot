@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -37,17 +38,18 @@ import com.codex.service.StudentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
+@ActiveProfiles("local")
 class StudentControllerV1Test {
-	private static final String ENDPOINT_GET_ALL_STUDENTS = "/v1/students";
-	private static final String ENDPOINT_CREATE_STUDENT = "/v1/student";
-	private static final String ENDPOINT_GET_STUDENT = "/v1/student";
-	private static final String ENDPOINT_DELETE_STUDENT = "/v1/student";
-	private static final String ENDPOINT_UPDATE_STUDENT = "/v1/student";
-	private static final String ENDPOINT_GET_STUDENTPOSTS = "/v1/student/posts";
-	private static final String ENDPOINT_CREATE_STUDENTPOSTS = "/v1/student/posts";
+	private static final String ENDPOINT_GET_ALL_STUDENTS = "/students";
+	private static final String ENDPOINT_CREATE_STUDENT = "/student";
+	private static final String ENDPOINT_GET_STUDENT = "/student";
+	private static final String ENDPOINT_DELETE_STUDENT = "/student";
+	private static final String ENDPOINT_UPDATE_STUDENT = "/student";
+	private static final String ENDPOINT_GET_STUDENTPOSTS = "/student/posts";
+	private static final String ENDPOINT_CREATE_STUDENTPOSTS = "/student/posts";
 
 	@InjectMocks
-	private StudentControllerV1 studentController;
+	private StudentController  studentController;
 
 	@Mock(answer = Answers.RETURNS_DEEP_STUBS)
 	private StudentService studentService;

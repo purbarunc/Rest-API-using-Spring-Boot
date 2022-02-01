@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.2'
+	id 'org.springframework.boot' version '2.6.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id "org.sonarqube" version "3.0"
@@ -49,7 +49,8 @@ dependencies {
 
 test {
 	doFirst {
-		systemProperty 'spring.profiles.active', 'local' // this setting will force unit test execution to use application-local.properties
+		// this setting will force unit test execution to use application-local.properties
+		systemProperty 'spring.profiles.active', 'local' 
 		println '> Using spring.profiles.active: ' +systemProperties['spring.profiles.active']
 	}
 	useJUnitPlatform()
