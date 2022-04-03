@@ -39,7 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @ActiveProfiles("local")
-class StudentControllerV1Test {
+class StudentControllerTest {
 	private static final String ENDPOINT_GET_ALL_STUDENTS = "/students";
 	private static final String ENDPOINT_CREATE_STUDENT = "/student";
 	private static final String ENDPOINT_GET_STUDENT = "/student";
