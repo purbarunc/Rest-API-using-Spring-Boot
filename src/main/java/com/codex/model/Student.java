@@ -37,8 +37,8 @@ import lombok.NoArgsConstructor;
 @ApiModel(description = "Details about Students")
 public class Student extends RepresentationModel<Student> {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column
 	@ApiModelProperty(notes = "Primary key of a Student")
 	private int id;
 
