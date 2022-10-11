@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles("default")
 class UserDetailsServiceImplTest {
 	@Autowired(required = false)
 	private BCryptPasswordEncoder encoder;

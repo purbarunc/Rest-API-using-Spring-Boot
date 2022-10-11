@@ -3,7 +3,6 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id "org.sonarqube" version "3.0"
-	id 'jacoco'
 }
 
 group = 'com.codex'
@@ -15,11 +14,6 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-}
-
-jacoco {
-    toolVersion = "0.8.5"
-    reportsDirectory = file("$buildDir/customJacocoReportDir")
 }
 
 repositories {
@@ -41,6 +35,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	implementation 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'com.h2database:h2'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -48,23 +43,14 @@ dependencies {
 
 test {
 	doFirst {
-		// this setting will force unit test execution to use application-local.properties
-		systemProperty 'spring.profiles.active', 'local' 
+		// this setting will force unit test execution to use application.properties
+		systemProperty 'spring.profiles.active', 'default' 
 		println '> Using spring.profiles.active: ' +systemProperties['spring.profiles.active']
 	}
 	useJUnitPlatform()
-	finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-    reports {
-        xml.enabled true
-        csv.enabled false
-        html.destination file("${buildDir}/reports/coverage")
-        xml.destination file("${rootProject.projectDir}/build/reports/jacoco/report.xml")
-    }
-}
+
 
 bootRun {
     main = 'com.codex.StudentServiceApplication'

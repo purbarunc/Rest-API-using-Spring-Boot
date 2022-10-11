@@ -25,7 +25,7 @@ import com.codex.model.Student;
 import com.codex.repository.StudentRepository;
 
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles("default")
 class StudentServiceImplTest {
 	@InjectMocks
 	private StudentServiceImpl studentServiceImpl;

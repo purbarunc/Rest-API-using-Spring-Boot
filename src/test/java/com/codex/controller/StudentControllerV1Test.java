@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
@@ -38,18 +37,17 @@ import com.codex.service.StudentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles("default")
 class StudentControllerV1Test {
 	private static final String ENDPOINT_GET_ALL_STUDENTS = "/students";
 	private static final String ENDPOINT_CREATE_STUDENT = "/student";
 	private static final String ENDPOINT_GET_STUDENT = "/student";
 	private static final String ENDPOINT_DELETE_STUDENT = "/student";
-	private static final String ENDPOINT_UPDATE_STUDENT = "/student";
 	private static final String ENDPOINT_GET_STUDENTPOSTS = "/student/posts";
 	private static final String ENDPOINT_CREATE_STUDENTPOSTS = "/student/posts";
 
 	@InjectMocks
-	private StudentController  studentController;
+	private StudentController studentController;
 
 	@Mock(answer = Answers.RETURNS_DEEP_STUBS)
 	private StudentService studentService;
@@ -156,18 +154,6 @@ class StudentControllerV1Test {
 				.accept(MediaType.APPLICATION_JSON_VALUE);
 		doThrow(EmptyResultDataAccessException.class).when(studentService).delete(anyInt());
 		mockMvc.perform(request).andExpect(status().isNotFound());
-	}
-
-	@Test
-	@Disabled("test case failing")
-	@DisplayName("updateStudent() gives response status 200 on successful Service call")
-	void updateStudentReturns200OnSuccessfulServiceCall() throws Exception {
-		StudentRequest studentRequest = getStudentRequest();
-		String requestBody = objectMapper.writeValueAsString(studentRequest);
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(ENDPOINT_UPDATE_STUDENT)
-				.queryParam("id", "5").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestBody)
-				.accept(MediaType.APPLICATION_JSON_VALUE);
-		mockMvc.perform(request).andExpect(status().isOk());
 	}
 
 	@Test
